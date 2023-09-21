@@ -10,6 +10,7 @@ import Dashboard from "./screens/Secure/Dashboard";
 import { View } from "react-native";
 import { STATUSBAR } from "./constant/Colors";
 import { Chat } from "./screens/Secure/Chat";
+import Book from "./screens/Secure/Book";
 
 
 export const CustomStatusBar = ()=> {
@@ -42,6 +43,7 @@ const  Router= ()=> {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="Chat" component={Chat} />
+          <Stack.Screen name="Book" component={Book} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

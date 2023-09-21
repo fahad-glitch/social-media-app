@@ -11,6 +11,7 @@ export default function Dashboard() {
     <View style={styles.container}>
       <Text>Dashboard</Text>
       <Button title="Open Chat" pressHandler={() => {navigate.navigate("Chat")}} />
+      <Button title="Books" pressHandler={() => {navigate.navigate("Book")}} />
       <Button title="Logout" pressHandler={() => {navigate.navigate("Login")}} />
     </View>
   );
