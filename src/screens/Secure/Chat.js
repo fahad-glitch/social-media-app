@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SYSTEMCOLOR } from "../../constant/Colors";
 import { useNavigation } from "@react-navigation/native";
+import getRequest from "../../services/Request";
 
 export const Chat = () => {
     const navigate=useNavigation();
@@ -23,7 +24,7 @@ export const Chat = () => {
         "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
     },
     {
-      title: "Fahad Asif",
+      title: "Muhammad Rohan",
       time: "10:00 AM",
       message: "Hello",
       unread: false,
@@ -32,7 +33,7 @@ export const Chat = () => {
         "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
     },
     {
-      title: "Fahad Asif",
+      title: "Ali Sherazi",
       time: "10:00 AM",
       message: "Hello! this is Fahad Asif. How Are you",
       unread: true,
@@ -41,7 +42,7 @@ export const Chat = () => {
         "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
     },
     {
-      title: "Fahad Asif",
+      title: "Kunwar Ali",
       time: "10:00 AM",
       message: "Hello",
       unread: true,
@@ -50,15 +51,17 @@ export const Chat = () => {
         "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
     },
   ]);
+
+  
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.listContainer}>
+      <TouchableOpacity style={styles.listContainer} onPress={()=>{navigate.navigate("SingleChat",{name:item.title})}}>
         <View style={styles.imageContainer}>
           <Image source={{ uri: item.image }} style={styles.image} />
         </View>
         <View style={styles.nameContainer}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.title}  numberOfLines={1}>{item.title}</Text>
             <Text style={styles.time}>{item.time}</Text>
           </View>
           <View style={styles.previewContainer}>
@@ -72,7 +75,7 @@ export const Chat = () => {
             )}
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   return (
@@ -143,6 +146,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
+    flex:0.8,
     fontSize: 18,
     fontWeight: "bold",
     color: "black",

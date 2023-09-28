@@ -11,6 +11,7 @@ import { View } from "react-native";
 import { STATUSBAR } from "./constant/Colors";
 import { Chat } from "./screens/Secure/Chat";
 import Book from "./screens/Secure/Book";
+import SingleChat from "./screens/Secure/SingleChat";
 
 
 export const CustomStatusBar = ()=> {
@@ -44,6 +45,7 @@ const  Router= ()=> {
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="Chat" component={Chat} />
           <Stack.Screen name="Book" component={Book} />
+          <Stack.Screen name="SingleChat" component={SingleChat} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

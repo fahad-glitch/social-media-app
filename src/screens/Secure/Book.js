@@ -75,6 +75,14 @@ export default function Book() {
     }
   };
 
+  const loadData= async()=>{
+    const api = getRequest("http://10.135.48.101:888/api/Books");
+    console.log(api);
+    // setData(api);
+  }
+  useEffect(()=>{
+    loadData();
+  })
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
