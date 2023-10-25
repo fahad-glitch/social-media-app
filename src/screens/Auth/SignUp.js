@@ -1,31 +1,32 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View
-} from "react-native";
+import { Image, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import Button from "../../components/Button";
 import { SYSTEMCOLOR } from "../../constant/Colors";
 import Images from "../../constant/Image";
 import { getData, storeData } from "../../services/Storage";
-export default function Login() {
+export default function SignUp() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigation();
-  const handlelogin = async() => {
-    const result =await getData(`user_${email}`);
-    
-    if(result){
-      if(result.password === password){
-        await storeData("USER",result);
-        // alert(JSON.stringify(result));
-        navigate.navigate("Dashboard");
-      }else{
-        // alert(JSON.stringify(result.name));
+  const handlelogin = async () => {
+    try {
+      const storeDat = await storeData(`user_${email}`, {
+        name: name,
+        email: email,
+        password: password,
+        mode: "Light",
+      });
+      if (storeDat) {
+        console.log(await getData(`user_${email}`));
+        navigate.navigate("Login");
       }
+      else{
+          alert("Something went wrong");
+      }
+    } catch (e) {
+      console.log("error",e);
     }
   };
   return (
@@ -39,6 +40,12 @@ export default function Login() {
         </View>
         <View style={styles.inputContainer}>
           {/* <Text>Email</Text> */}
+          <TextInput
+            placeholder="Name"
+            onChangeText={setName}
+            value={name}
+            style={styles.textInput}
+          />
           <TextInput
             placeholder="Email"
             onChangeText={setEmail}
@@ -55,8 +62,7 @@ export default function Login() {
           />
         </View>
         <View style={styles.bottomContainer}>
-         <Button title="SignUp" pressHandler={()=>{navigate.navigate("SignUp")}} />
-         <Button title="Login" pressHandler={handlelogin} />
+          <Button title="SignUp" pressHandler={handlelogin} />
         </View>
       </ScrollView>
     </View>
@@ -66,7 +72,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:SYSTEMCOLOR,
+    backgroundColor: SYSTEMCOLOR,
   },
   logoContainer: {
     flex: 0.3,
@@ -81,7 +87,6 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     flex: 0.3,
-    gap: 10,
     alignItems: "center",
   },
   textInput: {
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 5,
   },
-  
+
   inputItem: {
     width: "100%",
     alignItems: "center",

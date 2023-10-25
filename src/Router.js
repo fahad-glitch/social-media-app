@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
     SafeAreaProvider,
@@ -12,6 +12,9 @@ import { STATUSBAR } from "./constant/Colors";
 import { Chat } from "./screens/Secure/Chat";
 import Book from "./screens/Secure/Book";
 import SingleChat from "./screens/Secure/SingleChat";
+import Sample from "./screens/Secure/Sample";
+import SignUp from "./screens/Auth/SignUp";
+import { getData } from "./services/Storage";
 
 
 export const CustomStatusBar = ()=> {
@@ -28,7 +31,16 @@ export const CustomStatusBar = ()=> {
 const Stack = createNativeStackNavigator();
 
 const  Router= ()=> {
-  
+  const [initialRouteName, setInitialRouteName] =useState("Login");
+  const getProfile = async () => {
+    let data = await getData("USER");
+    if (data) {
+      setInitialRouteName("Dashboard");
+    }
+  };
+  useEffect(() => {
+    getProfile();
+  }, []);
   
   
   return (
@@ -36,16 +48,19 @@ const  Router= ()=> {
       <CustomStatusBar />
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={"Login"}
+          initialRouteName={initialRouteName}
           screenOptions={{
             headerShown: false,
           }}
         >
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignUp" component={SignUp} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="Chat" component={Chat} />
           <Stack.Screen name="Book" component={Book} />
           <Stack.Screen name="SingleChat" component={SingleChat} />
+          {/* <Stack.Screen name="Sample" component={Sample} /> */}
+        
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

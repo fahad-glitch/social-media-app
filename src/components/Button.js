@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { BUTTONCOLOR } from "../constant/Colors";
+import { BUTTONCOLOR, BUTTONDARKCOLOR } from "../constant/Colors";
 
-export default function Button({ title, pressHandler }) {
+export default function Button({ title, pressHandler,mode }) {
   return (
-    <TouchableOpacity onPress={pressHandler} style={styles.Button}>
-      <Text style={{ color: "white", fontSize: 20 }}>{title}</Text>
+    <TouchableOpacity onPress={pressHandler} style={[styles.Button, mode==="Dark"&&{backgroundColor:BUTTONDARKCOLOR}]}>
+      <Text style={[{ color: "white", fontSize: 20 },mode==="Dark" && {color:"black"}]}>{title}</Text>
     </TouchableOpacity>
   );
 }
