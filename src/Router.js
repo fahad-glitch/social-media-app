@@ -1,37 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {
-    SafeAreaProvider,
-    useSafeAreaInsets,
-  } from "react-native-safe-area-context";
-import Login from "./screens/Auth/Login";
 import { NavigationContainer } from "@react-navigation/native";
-import Dashboard from "./screens/Secure/Dashboard";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
-import { STATUSBAR } from "./constant/Colors";
-import { Chat } from "./screens/Secure/Chat";
-import Book from "./screens/Secure/Book";
-import SingleChat from "./screens/Secure/SingleChat";
-import Sample from "./screens/Secure/Sample";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import Login from "./screens/Auth/Login";
 import SignUp from "./screens/Auth/SignUp";
+import Book from "./screens/Secure/Book";
+import { Chat } from "./screens/Secure/Chat";
+import Dashboard from "./screens/Secure/Dashboard";
+import SingleChat from "./screens/Secure/SingleChat";
 import { getData } from "./services/Storage";
+import TabularView from "./screens/Secure/TabularView";
+import FlatView from "./screens/Secure/FlatView";
 
-
-export const CustomStatusBar = ()=> {
+export const CustomStatusBar = () => {
   const insets = useSafeAreaInsets();
   return (
     <View
       style={{
         height: insets.top,
-        backgroundColor:"#337CCF",
+        backgroundColor: "#fff",
       }}
     />
   );
-}
+};
 const Stack = createNativeStackNavigator();
 
-const  Router= ()=> {
-  const [initialRouteName, setInitialRouteName] =useState("Login");
+const Router = () => {
+  const [initialRouteName, setInitialRouteName] = useState("Login");
   const getProfile = async () => {
     let data = await getData("USER");
     if (data) {
@@ -41,8 +40,7 @@ const  Router= ()=> {
   useEffect(() => {
     getProfile();
   }, []);
-  
-  
+
   return (
     <SafeAreaProvider>
       <CustomStatusBar />
@@ -53,18 +51,18 @@ const  Router= ()=> {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="SignUp" component={SignUp} />
+          {/* <Stack.Screen name="Login" component={Login} /> */}
+          {/* <Stack.Screen name="SignUp" component={SignUp} /> */}
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="Chat" component={Chat} />
           <Stack.Screen name="Book" component={Book} />
           <Stack.Screen name="SingleChat" component={SingleChat} />
-          {/* <Stack.Screen name="Sample" component={Sample} /> */}
-        
+          <Stack.Screen name="Tabular" component={TabularView} />
+          <Stack.Screen name="FlatView" component={FlatView} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
-}
+};
 
 export default Router;

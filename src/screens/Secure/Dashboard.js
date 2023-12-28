@@ -99,6 +99,13 @@ export default function Dashboard() {
           }}
           mode={mode}
         />
+        <Button
+          title="Lab Final"
+          pressHandler={() => {
+            navigate.navigate("FlatView");
+          }}
+          mode={mode}
+        />
         <Button title="Logout" pressHandler={handleLogout} mode={mode} />
       </View>
     </View>
