@@ -1,307 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import useCSVData from "../../hooks/useCSVData";
-import { Touchable } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Table, Row, Rows } from "react-native-table-component";
 import ButtonFilter from "../../components/ButtonFilter";
-import {app} from "../../services/Firebase";
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { app } from "../../services/Firebase";
+import { getDatabase, onValue, ref } from "firebase/database";
 export default function FlatView() {
   const [tabular, setTabular] = useState(false);
-  const [sortedData, setSortedData] = useState([]);
-  const [classFlag, setClassFlag] = useState(false);
+  const [parentData, setParentData] = useState(null);
+  const [data, setData] = useState(null);
 
-  const parentData = [
-    {
-      baseFare: 1059,
-      reservationCharge: 60,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 56,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 1175,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0008" },
-        { date: "3-12-2023", status: "AVAILABLE-0014" },
-        { date: "5-12-2023", status: "AVAILABLE-0011" },
-        { date: "6-12-2023", status: "AVAILABLE-0004" },
-        { date: "7-12-2023", status: "AVAILABLE-0014" },
-        { date: "9-12-2023", status: "AVAILABLE-0012" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "SRID",
-      classCode: "1A",
-      distance: 54,
-      duration: 33,
-    },
-    {
-      baseFare: 626,
-      reservationCharge: 50,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 34,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 710,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0020" },
-        { date: "3-12-2023", status: "AVAILABLE-0026" },
-        { date: "5-12-2023", status: "AVAILABLE-0029" },
-        { date: "6-12-2023", status: "AVAILABLE-0018" },
-        { date: "7-12-2023", status: "AVAILABLE-0026" },
-        { date: "9-12-2023", status: "AVAILABLE-0022" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "SRID",
-      classCode: "2A",
-      distance: 54,
-      duration: 33,
-    },
-    {
-      baseFare: 441,
-      reservationCharge: 40,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 24,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 505,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0136" },
-        { date: "3-12-2023", status: "AVAILABLE-0192" },
-        { date: "5-12-2023", status: "AVAILABLE-0185" },
-        { date: "6-12-2023", status: "AVAILABLE-0139" },
-        { date: "7-12-2023", status: "AVAILABLE-0154" },
-        { date: "9-12-2023", status: "AVAILABLE-0140" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "SRID",
-      classCode: "3A",
-      distance: 54,
-      duration: 33,
-    },
-    {
-      baseFare: 125,
-      reservationCharge: 20,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 0,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 145,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0090" },
-        { date: "3-12-2023", status: "AVAILABLE-0101" },
-        { date: "5-12-2023", status: "AVAILABLE-0100" },
-        { date: "6-12-2023", status: "AVAILABLE-0067" },
-        { date: "7-12-2023", status: "AVAILABLE-0118" },
-        { date: "9-12-2023", status: "AVAILABLE-0125" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "SRID",
-      classCode: "SL",
-      distance: 54,
-      duration: 33,
-    },
-    {
-      baseFare: 1059,
-      reservationCharge: 60,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 56,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 115,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0008" },
-        { date: "3-12-2023", status: "AVAILABLE-0014" },
-        { date: "5-12-2023", status: "AVAILABLE-0011" },
-        { date: "6-12-2023", status: "AVAILABLE-0004" },
-        { date: "7-12-2023", status: "AVAILABLE-0014" },
-        { date: "9-12-2023", status: "AVAILABLE-0012" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "KKB",
-      classCode: "1A",
-      distance: 69,
-      duration: 49,
-    },
-    {
-      baseFare: 626,
-      reservationCharge: 50,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 34,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 710,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0020" },
-        { date: "3-12-2023", status: "AVAILABLE-0026" },
-        { date: "5-12-2023", status: "AVAILABLE-0029" },
-        { date: "6-12-2023", status: "AVAILABLE-0018" },
-        { date: "7-12-2023", status: "AVAILABLE-0026" },
-        { date: "9-12-2023", status: "AVAILABLE-0022" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "KKB",
-      classCode: "2A",
-      distance: 69,
-      duration: 49,
-    },
-    {
-      baseFare: 441,
-      reservationCharge: 40,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 24,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 505,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0136" },
-        { date: "3-12-2023", status: "AVAILABLE-0192" },
-        { date: "5-12-2023", status: "AVAILABLE-0185" },
-        { date: "6-12-2023", status: "AVAILABLE-0139" },
-        { date: "7-12-2023", status: "AVAILABLE-0154" },
-        { date: "9-12-2023", status: "AVAILABLE-0140" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "KKB",
-      classCode: "3A",
-      distance: 69,
-      duration: 49,
-    },
-    {
-      baseFare: 125,
-      reservationCharge: 20,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 0,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 145,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0090" },
-        { date: "3-12-2023", status: "AVAILABLE-0101" },
-        { date: "5-12-2023", status: "AVAILABLE-0100" },
-        { date: "6-12-2023", status: "AVAILABLE-0067" },
-        { date: "7-12-2023", status: "AVAILABLE-0118" },
-        { date: "9-12-2023", status: "AVAILABLE-0125" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "KKB",
-      classCode: "SL",
-      distance: 69,
-      duration: 49,
-    },
-    {
-      baseFare: 1059,
-      reservationCharge: 60,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 56,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 1175,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0008" },
-        { date: "3-12-2023", status: "AVAILABLE-0014" },
-        { date: "5-12-2023", status: "AVAILABLE-0011" },
-        { date: "6-12-2023", status: "AVAILABLE-0004" },
-        { date: "7-12-2023", status: "AVAILABLE-0014" },
-        { date: "9-12-2023", status: "AVAILABLE-0012" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "NU",
-      classCode: "1A",
-      distance: 85,
-      duration: 72,
-    },
-    {
-      baseFare: 626,
-      reservationCharge: 50,
-      superfastCharge: 0,
-      fuelAmount: 0,
-      totalConcession: 0,
-      tatkalFare: 0,
-      serviceTax: 34,
-      otherCharge: 0,
-      cateringCharge: 0,
-      dynamicFare: 0,
-      totalFare: 740,
-      availability: [
-        { date: "2-12-2023", status: "AVAILABLE-0020" },
-        { date: "3-12-2023", status: "AVAILABLE-0025" },
-        { date: "5-12-2023", status: "AVAILABLE-0029" },
-        { date: "6-12-2023", status: "AVAILABLE-0018" },
-        { date: "7-12-2023", status: "AVAILABLE-0026" },
-        { date: "9-12-2023", status: "AVAILABLE-0022" },
-      ],
-      trainNumber: 11464,
-      timeStamp: "13:07.8",
-      fromStnCode: "JBP",
-      toStnCode: "NU",
-      classCode: "2A",
-      distance: 85,
-      duration: 72,
-    },
-  ];
-
-  const [data, setData] = useState();
   const tableHead = ["Train", "Class", "Base Fare", "Total Fare", "Service"];
 
   const buttonItem = [
@@ -309,7 +16,6 @@ export default function FlatView() {
       title: "All",
       handleChange: () => {
         setData(parentData);
-        setClassFlag(false);
       },
     },
     {
@@ -359,49 +65,54 @@ export default function FlatView() {
   };
 
   const sortByLessBaseFare = () => {
-    if (classFlag) {
-      const newData = data.sort((a, b) => a.totalFare - b.totalFare);
-      setData(newData);
+    setData((prevData) => {
+      const newData = [...prevData].sort((a, b) => a.totalFare - b.totalFare);
       console.log(newData);
-    } else {
-      const newData = parentData.sort((a, b) => a.totalFare - b.totalFare);
-      setData(newData);
-    }
+      return newData;
+    });
   };
+
   const sortByMoreBaseFare = () => {
-    if (classFlag) {
-      setData(null);
-      const newData = data.sort((a, b) => b.totalFare - a.totalFare);
+    setData((prevData) => {
+      const newData = [...prevData].sort((a, b) => b.totalFare - a.totalFare);
       console.log(newData);
-      setData(newData);
-    } else {
-      const newData = parentData.sort((a, b) => b.totalFare - a.totalFare);
-      setData(newData);
-    }
+      return newData;
+    });
   };
+
   const selectClass = (className) => {
     const newData = parentData.filter((item) => item.classCode == className);
     setData(newData);
-    setClassFlag(true);
   };
 
+  const fetchData = async () => {
+    try {
+      // Use require to import the JSON file
+      const data = require("../../constant/Dataset.json");
+
+      // Set the JSON data in the state
+      console.log(data);
+      setParentData(data);
+      setData(data);
+    } catch (error) {
+      console.error("Error reading JSON file:", error);
+    }
+  };
 
   useEffect(() => {
-    setData(parentData);
-    const db= getDatabase(app);
-    const dbRef = ref(db, 'flag');
+    fetchData();
+    const db = getDatabase(app);
+    const dbRef = ref(db, "flag");
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
       setTabular(data.tabular);
     });
-
   }, []);
 
-  // useEffect(() => {
-  //   console.log(data);
-  // }, [data, classFlag]);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
-  
   return (
     <View style={styles.container}>
       <Text
@@ -437,18 +148,6 @@ export default function FlatView() {
           ))}
         </ScrollView>
       </View>
-
-      {/* <Text
-        style={{
-          textAlign: "center",
-          fontWeight: "bold",
-          paddingVertical: 16,
-          fontSize: 20,
-        }}
-      >
-
-        {tabular ? "Tabular View" : "FlatList View"}
-      </Text> */}
       {tabular ? (
         <View style={styles.containerTable}>
           <ScrollView>
