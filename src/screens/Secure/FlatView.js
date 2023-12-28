@@ -4,11 +4,12 @@ import { Table, Row, Rows } from "react-native-table-component";
 import ButtonFilter from "../../components/ButtonFilter";
 import { app } from "../../services/Firebase";
 import { getDatabase, onValue, ref } from "firebase/database";
+import useFetchUIControl from "../../hooks/useFetchUIControl";
 export default function FlatView() {
   const [tabular, setTabular] = useState(false);
   const [parentData, setParentData] = useState(null);
   const [data, setData] = useState(null);
-
+  const flag = useFetchUIControl('flag');
   const tableHead = ["Train", "Class", "Base Fare", "Total Fare", "Service"];
 
   const buttonItem = [
@@ -67,7 +68,6 @@ export default function FlatView() {
   const sortByLessBaseFare = () => {
     setData((prevData) => {
       const newData = [...prevData].sort((a, b) => a.totalFare - b.totalFare);
-      console.log(newData);
       return newData;
     });
   };
@@ -75,7 +75,6 @@ export default function FlatView() {
   const sortByMoreBaseFare = () => {
     setData((prevData) => {
       const newData = [...prevData].sort((a, b) => b.totalFare - a.totalFare);
-      console.log(newData);
       return newData;
     });
   };
@@ -87,11 +86,7 @@ export default function FlatView() {
 
   const fetchData = async () => {
     try {
-      // Use require to import the JSON file
       const data = require("../../constant/Dataset.json");
-
-      // Set the JSON data in the state
-      console.log(data);
       setParentData(data);
       setData(data);
     } catch (error) {
@@ -101,17 +96,8 @@ export default function FlatView() {
 
   useEffect(() => {
     fetchData();
-    const db = getDatabase(app);
-    const dbRef = ref(db, "flag");
-    onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-      setTabular(data.tabular);
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+    setTabular(flag);
+  }, [flag]);
 
   return (
     <View style={styles.container}>
@@ -187,7 +173,12 @@ export default function FlatView() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
+  container: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 30,
+    backgroundColor: "#fff",
+  },
   header: {
     flexDirection: "row",
     paddingVertical: 8,
