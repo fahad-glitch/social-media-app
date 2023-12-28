@@ -11,10 +11,13 @@ import useCSVData from "../../hooks/useCSVData";
 import { Touchable } from "react-native";
 import { Table, Row, Rows } from "react-native-table-component";
 import ButtonFilter from "../../components/ButtonFilter";
+import {app} from "../../services/Firebase";
+import { getDatabase, onValue, ref, set } from "firebase/database";
 export default function FlatView() {
-  const [tabular, setTabular] = useState(true);
+  const [tabular, setTabular] = useState(false);
   const [sortedData, setSortedData] = useState([]);
   const [classFlag, setClassFlag] = useState(false);
+
   const parentData = [
     {
       baseFare: 1059,
@@ -297,6 +300,7 @@ export default function FlatView() {
       duration: 72,
     },
   ];
+
   const [data, setData] = useState();
   const tableHead = ["Train", "Class", "Base Fare", "Total Fare", "Service"];
 
@@ -349,7 +353,7 @@ export default function FlatView() {
         <Text style={styles.text}>{item.classCode}</Text>
         <Text style={styles.text}>{item.baseFare}</Text>
         <Text style={styles.text}>{item.totalFare}</Text>
-        <Text style={styles.text}>{item.classCode}</Text>
+        <Text style={styles.text}>{item.serviceTax}</Text>
       </View>
     );
   };
@@ -358,6 +362,7 @@ export default function FlatView() {
     if (classFlag) {
       const newData = data.sort((a, b) => a.totalFare - b.totalFare);
       setData(newData);
+      console.log(newData);
     } else {
       const newData = parentData.sort((a, b) => a.totalFare - b.totalFare);
       setData(newData);
@@ -365,26 +370,38 @@ export default function FlatView() {
   };
   const sortByMoreBaseFare = () => {
     if (classFlag) {
+      setData(null);
       const newData = data.sort((a, b) => b.totalFare - a.totalFare);
+      console.log(newData);
       setData(newData);
     } else {
       const newData = parentData.sort((a, b) => b.totalFare - a.totalFare);
       setData(newData);
     }
   };
-  useEffect(() => {
-    setData(parentData);
-  }, []);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const selectClass = (className) => {
     const newData = parentData.filter((item) => item.classCode == className);
     setData(newData);
     setClassFlag(true);
   };
+
+
+  useEffect(() => {
+    setData(parentData);
+    const db= getDatabase(app);
+    const dbRef = ref(db, 'flag');
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      setTabular(data.tabular);
+    });
+
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data, classFlag]);
+
+  
   return (
     <View style={styles.container}>
       <Text
